@@ -36,6 +36,9 @@ MANIFEST
 # PyCharm
 .idea
 
+# directories
+output/*
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
