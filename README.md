@@ -4,5 +4,5 @@
 
 ***
 
-![](https://github.com/FlaviaLopes/leishmaniose/blob/main/ref/imagens/flebotomineo.jpg)
+![flebotomíneo fêmea](https://github.com/FlaviaLopes/leishmaniose/blob/main/refs/imagens/flebotomineo.jpg)
 
