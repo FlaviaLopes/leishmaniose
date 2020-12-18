@@ -38,6 +38,9 @@ MANIFEST
 
 # directories
 output/*
+data/raw/*
+data/interim/*
+data/processed/*
 
 # Installer logs
 pip-log.txt
