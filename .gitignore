@@ -41,6 +41,7 @@ output/*
 data/raw/*
 data/interim/*
 data/processed/*
+data/indicadores/*
 
 # Installer logs
 pip-log.txt
