@@ -14,16 +14,23 @@ def total_casos_novos_municipio_infeccao_ano_14(df):
     | output:
     | - dataframe com Número total de casos novos de LV por local provável de infecção.
     '''
-    data = df.loc[(df.ENTRADA == 1), :].copy()
-    anos = data['ANO'].unique()
+    municipios = pd.read_csv('../data/processed/municipios.csv').ibge_code.values
+    casos_novos = df.loc[(df.ENTRADA == 1), :].copy()
+    anos = casos_novos['ANO'].unique()
     anos.sort()
+    
     casos_novos_por_ano = pd.DataFrame()
     for ano in anos:
         casos_novos_por_ano = pd.concat([
             casos_novos_por_ano,
-            data.loc[data.ANO == ano, :].groupby('CO_MN_INF')['CO_MN_INF'].count().rename(ano)
+            casos_novos.loc[casos_novos.ANO == ano, :].groupby('CO_MN_INF')['CO_MN_INF'].count().rename(ano)
         ], axis=1)
     
+    sem_casos_novos = set(municipios).difference(set(casos_novos_por_ano.index))
+    casos_novos_por_ano = pd.concat([
+        casos_novos_por_ano,
+        pd.DataFrame(index=sem_casos_novos, columns=anos)
+    ], axis=0)
     return casos_novos_por_ano.fillna(0)
    
 def total_casos_novos_municipio_residencia_ano_14(df):
@@ -40,6 +47,7 @@ def total_casos_novos_municipio_residencia_ano_14(df):
     | output:
     | - dataframe com Número total de casos novos de LV por local provável de infecção.
     '''
+    municipios = pd.read_csv('../data/processed/municipios.csv').ibge_code.values
     data = df.loc[(df.ENTRADA == 1), :].copy()
     anos = data['ANO'].unique()
     anos.sort()
@@ -49,6 +57,12 @@ def total_casos_novos_municipio_residencia_ano_14(df):
             casos_novos_por_ano,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
+        
+    sem_casos_novos = set(municipios).difference(set(casos_novos_por_ano.index))
+    casos_novos_por_ano = pd.concat([
+        casos_novos_por_ano,
+        pd.DataFrame(index=sem_casos_novos, columns=anos)
+    ], axis=0)
     
     return casos_novos_por_ano.fillna(0)    
 
@@ -115,6 +129,13 @@ def proporcao_casos_confirmados_criterio_laboratorial_16(df):
             casos_laboratoriais_por_ano,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
+        
+    sem_casos_novos_criterio_laboratorial = set(casos.index).difference(set(casos_laboratoriais_por_ano.index))
+    casos_laboratoriais_por_ano = pd.concat([
+        casos_laboratoriais_por_ano,
+        pd.DataFrame(index=sem_casos_novos_criterio_laboratorial, columns=anos)
+    ], axis=0)
+    
     for idx in casos_laboratoriais_por_ano.index:
         try:
             proporcao.loc[idx] = casos_laboratoriais_por_ano.loc[idx] / casos.loc[idx] * 100
@@ -148,6 +169,12 @@ def proporcao_casos_menor_5_anos_17(df):
             menor_5_anos,
             data.loc[data.ANO == ano, :].groupby('CO_MN_INF')['CO_MN_INF'].count().rename(ano)
         ], axis=1)
+        
+    sem_casos_menor_5_anos = set(casos.index).difference(set(menor_5_anos.index))
+    menor_5_anos = pd.concat([
+        menor_5_anos,
+        pd.DataFrame(index=sem_casos_menor_5_anos, columns=anos)
+    ], axis=0)
     
     for idx in menor_5_anos.index:
         try:
@@ -183,6 +210,12 @@ def proporcao_casos_50_anos_mais_18(df):
             data.loc[data.ANO == ano, :].groupby('CO_MN_INF')['CO_MN_INF'].count().rename(ano)
         ], axis=1)
     
+    sem_casos_50_anos_mais = set(casos.index).difference(set(cinquenta_anos_mais.index))
+    cinquenta_anos_mais = pd.concat([
+        cinquenta_anos_mais,
+        pd.DataFrame(index=sem_casos_50_anos_mais, columns=anos)
+    ], axis=0)
+    
     for idx in cinquenta_anos_mais.index:
         try:
             proporcao.loc[idx] = cinquenta_anos_mais.loc[idx] / casos.loc[idx] * 100
@@ -216,6 +249,12 @@ def proporcao_casos_hiv_19(df):
             hiv,
             data.loc[data.ANO == ano, :].groupby('CO_MN_INF')['CO_MN_INF'].count().rename(ano)
         ], axis=1)
+    
+    sem_casos_hiv = set(casos.index).difference(set(hiv.index))
+    hiv = pd.concat([
+        hiv,
+        pd.DataFrame(index=sem_casos_hiv, columns=anos)
+    ], axis=0)
     
     for idx in hiv.index:
         try:
@@ -251,6 +290,12 @@ def proporcao_casos_cura_clinica_20(df):
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
     
+    sem_casos_cura_clinica = set(casos.index).difference(set(cura.index))
+    cura = pd.concat([
+        cura,
+        pd.DataFrame(index=sem_casos_cura_clinica, columns=anos)
+    ], axis=0)
+    
     for idx in cura.index:
         try:
             proporcao.loc[idx] = cura.loc[idx] / casos.loc[idx] * 100
@@ -267,6 +312,7 @@ def total_obitos_residencia_ano_21(df):
     | Método de cálculo: Número total de casos de LV (novos e rescidivas) por local de residencia (município) 
     | no ano de notificação
     '''
+    municipios = pd.read_csv('../data/processed/municipios.csv').ibge_code.values
     data = df.loc[((df.ENTRADA == 1) | (df.ENTRADA == 2)) & (df.EVOLUCAO == 3), :].copy()
     anos = data['ANO'].unique()
     anos.sort()
@@ -276,6 +322,12 @@ def total_obitos_residencia_ano_21(df):
             obitos,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
+    
+    sem_obitos = set(municipios).difference(set(obitos.index))
+    obitos = pd.concat([
+        obitos,
+        pd.DataFrame(index=sem_obitos, columns=anos)
+    ], axis=0)
     
     return obitos.fillna(0).astype(int)
     
@@ -292,24 +344,30 @@ def taxa_letalidade_municipio_residencia_ano_22(df):
     | no ano de notificação dividido por número total de casos (novos e recidivas) de LV 
     | por local de residência (município) no ano de notificação x 100
     """
-    
+    obitos = total_obitos_residencia_ano_21(df)
     data = df.loc[(df.ENTRADA == 1) | (df.ENTRADA == 2), :].copy()
     anos = data['ANO'].unique()
     anos.sort()
     
-    casos = pd.DataFrame()
+    casos_novos_rescidivas = pd.DataFrame()
     for ano in anos:
-        casos = pd.concat([
-            casos,
+        casos_novos_rescidivas = pd.concat([
+            casos_novos_rescidivas,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
     
-    obitos = total_obitos_residencia_ano_21(df)
-    taxa = pd.DataFrame(columns=casos.columns, index=casos.index)
+    
+    sem_casos_novos_rescidivas = set(obitos.index).difference(set(casos_novos_rescidivas.index))
+    casos_novos_rescidivas = pd.concat([
+        casos_novos_rescidivas,
+        pd.DataFrame(index=sem_casos_novos_rescidivas, columns=anos)
+    ], axis=0)
+    
+    taxa = pd.DataFrame(columns=casos_novos_rescidivas.columns, index=casos_novos_rescidivas.index)
           
     for idx in obitos.index:
         try:
-            taxa.loc[idx] = obitos.loc[idx] / casos.loc[idx] * 100
+            taxa.loc[idx] = obitos.loc[idx] / casos_novos_rescidivas.loc[idx] * 100
         except:
             print(idx)
         
@@ -327,31 +385,44 @@ def taxa_letalidade_hiv_municipio_residencia_ano_23(df):
     | no ano de notificação dividido por número total de casos (novos e recidivas) de LV 
     | por local de residência (município) no ano de notificação x 100
     """
-    
+    municipios = pd.read_csv('../data/processed/municipios.csv').ibge_code.values
     data = df.loc[((df.ENTRADA == 1) | (df.ENTRADA == 2)) & (df.EVOLUCAO == 3) & (df.HIV == 1), :].copy()
     anos = data['ANO'].unique()
     anos.sort()
-    obitos = pd.DataFrame()
+    
+    obitos_hiv = pd.DataFrame()
     for ano in anos:
-        obitos = pd.concat([
-            obitos,
+        obitos_hiv = pd.concat([
+            obitos_hiv,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
+        
+    sem_obitos_hiv = set(municipios).difference(set(obitos_hiv.index))
+    obitos_hiv = pd.concat([
+        obitos_hiv,
+        pd.DataFrame(index=sem_obitos_hiv, columns=anos)
+    ], axis=0)
                   
     data = df.loc[((df.ENTRADA == 1) | (df.ENTRADA == 2)) & (df.HIV == 1), :].copy()
     
-    casos = pd.DataFrame()
+    casos_hiv = pd.DataFrame()
     for ano in anos:
-        casos = pd.concat([
-            casos,
+        casos_hiv = pd.concat([
+            casos_hiv,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
-   
-    taxa = pd.DataFrame(columns=casos.columns, index=casos.index)
     
-    for idx in obitos.index:
+    sem_casos_hiv = set(municipios).difference(set(casos_hiv.index))
+    casos_hiv = pd.concat([
+        casos_hiv,
+        pd.DataFrame(index=sem_casos_hiv, columns=anos)
+    ], axis=0)
+    
+    taxa = pd.DataFrame(columns=casos_hiv.columns, index=casos_hiv.index)
+    
+    for idx in taxa.index:
         try:
-            taxa.loc[idx] = obitos.loc[idx] / casos.loc[idx] * 100
+            taxa.loc[idx] = obitos_hiv.loc[idx] / casos_hiv.loc[idx] * 100
         except:
             print(idx)
         
@@ -372,31 +443,43 @@ def taxa_letalidade_menor_5_anos_municipio_residencia_ano_24(df):
     | no ano de notificação dividido por número total de casos (novos e recidivas) de LV 
     | em menores de 5 anos por local de residência (município) no ano de notificação x 100
     """
-    
+    municipios = pd.read_csv('../data/processed/municipios.csv').ibge_code.values
     data = df.loc[((df.ENTRADA == 1) | (df.ENTRADA == 2)) & (df.EVOLUCAO == 3) & (df.IDADE < 5), :].copy()
     anos = data['ANO'].unique()
     anos.sort()
-    obitos = pd.DataFrame()
+    obitos_menor_5_anos = pd.DataFrame()
     for ano in anos:
-        obitos = pd.concat([
-            obitos,
+        obitos_menor_5_anos = pd.concat([
+            obitos_menor_5_anos,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
+        
+    sem_obitos_menor_5_anos = set(municipios).difference(set(obitos_menor_5_anos.index))
+    obitos_menor_5_anos = pd.concat([
+        obitos_menor_5_anos,
+        pd.DataFrame(index=sem_obitos_menor_5_anos, columns=anos)
+    ], axis=0)
                   
     data = df.loc[((df.ENTRADA == 1) | (df.ENTRADA == 2)) & (df.IDADE < 5), :].copy()
     
-    casos = pd.DataFrame()
+    casos_menor_5_anos = pd.DataFrame()
     for ano in anos:
-        casos = pd.concat([
-            casos,
+        casos_menor_5_anos = pd.concat([
+            casos_menor_5_anos,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
-   
-    taxa = pd.DataFrame(columns=casos.columns, index=casos.index)
+        
+    sem_casos_menor_5_anos = set(municipios).difference(set(casos_menor_5_anos.index))
+    casos_menor_5_anos = pd.concat([
+        casos_menor_5_anos,
+        pd.DataFrame(index=sem_casos_menor_5_anos, columns=anos)
+    ], axis=0)
     
-    for idx in obitos.index:
+    taxa = pd.DataFrame(columns=casos_menor_5_anos.columns, index=casos_menor_5_anos.index)
+    
+    for idx in taxa.index:
         try:
-            taxa.loc[idx] = obitos.loc[idx] / casos.loc[idx] * 100
+            taxa.loc[idx] = obitos_menor_5_anos.loc[idx] / casos_menor_5_anos.loc[idx] * 100
         except:
             print(idx)
         
@@ -417,31 +500,43 @@ def taxa_letalidade_50_anos_mais_municipio_residencia_ano_25(df):
     | no ano de notificação dividido por número total de casos (novos e recidivas) de LV 
     | em >= 50 anos por local de residência (município) no ano de notificação x 100
     """
-    
+    municipios = pd.read_csv('../data/processed/municipios.csv').ibge_code.values
     data = df.loc[((df.ENTRADA == 1) | (df.ENTRADA == 2)) & (df.EVOLUCAO == 3) & (df.IDADE >= 50), :].copy()
     anos = data['ANO'].unique()
     anos.sort()
-    obitos = pd.DataFrame()
+    obitos_50_anos_mais = pd.DataFrame()
     for ano in anos:
-        obitos = pd.concat([
-            obitos,
+        obitos_50_anos_mais = pd.concat([
+            obitos_50_anos_mais,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
-                  
+    
+    sem_obitos_50_anos_mais = set(municipios).difference(set(obitos_50_anos_mais.index))
+    obitos_50_anos_mais = pd.concat([
+        obitos_50_anos_mais,
+        pd.DataFrame(index=sem_obitos_50_anos_mais, columns=anos)
+    ], axis=0)
+    
     data = df.loc[((df.ENTRADA == 1) | (df.ENTRADA == 2)) & (df.IDADE >= 50), :].copy()
     
-    casos = pd.DataFrame()
+    casos_50_anos_mais = pd.DataFrame()
     for ano in anos:
-        casos = pd.concat([
-            casos,
+        casos_50_anos_mais = pd.concat([
+            casos_50_anos_mais,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
    
-    taxa = pd.DataFrame(columns=casos.columns, index=casos.index)
+    sem_casos_50_anos_mais = set(municipios).difference(set(casos_50_anos_mais.index))
+    casos_50_anos_mais = pd.concat([
+        casos_50_anos_mais,
+        pd.DataFrame(index=sem_casos_50_anos_mais, columns=anos)
+    ], axis=0)
     
-    for idx in obitos.index:
+    taxa = pd.DataFrame(columns=casos_50_anos_mais.columns, index=casos_50_anos_mais.index)
+    
+    for idx in taxa.index:
         try:
-            taxa.loc[idx] = obitos.loc[idx] / casos.loc[idx] * 100
+            taxa.loc[idx] = obitos_50_anos_mais.loc[idx] / casos_50_anos_mais.loc[idx] * 100
         except:
             print(idx)
         
@@ -454,35 +549,47 @@ def proporcao_casos_evolucao_ignorada_branco_ano_26(df):
     | - Este indicador impacta nos resultados dos demais indicadores de evolução.
     | 
     | Método de cálculo:
-    | - Número total de casos de LV (novos e rescidivas) com evolução ignorada ou em branco agrupados por local de residência (município) 
-    | de residência no ano de notificação dividido por número total de casos (novos e recidivas) de LV 
+    | - Número total de casos de LV (novos e rescidivas) com evolução ignorada ou em branco agrupados por local de residência 
+    | (município) no ano de notificação dividido por número total de casos (novos e recidivas) de LV 
     | por local de residência (município) no ano de notificação x 100
     """
-    
+    municipios = pd.read_csv('../data/processed/municipios.csv').ibge_code.values    
     data = df.loc[((df.ENTRADA == 1) | (df.ENTRADA == 2)) & (df.EVOLUCAO.isnull()), :].copy()
     anos = data['ANO'].unique()
     anos.sort()
-    null = pd.DataFrame()
+    evolucao_null = pd.DataFrame()
     for ano in anos:
-        null = pd.concat([
-            null,
+        evolucao_null = pd.concat([
+            evolucao_null,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
-                  
+            
+    sem_evolucao_null = set(municipios).difference(set(evolucao_null.index))
+    evolucao_null = pd.concat([
+        evolucao_null,
+        pd.DataFrame(index=sem_evolucao_null, columns=anos)
+    ], axis=0)
+    
     data = df.loc[((df.ENTRADA == 1) | (df.ENTRADA == 2)), :].copy()
     
-    casos = pd.DataFrame()
+    casos_novos_rescidivas = pd.DataFrame()
     for ano in anos:
-        casos = pd.concat([
-            casos,
+        casos_novos_rescidivas = pd.concat([
+            casos_novos_rescidivas,
             data.loc[data.ANO == ano, :].groupby('CO_MN_RESI')['CO_MN_RESI'].count().rename(ano)
         ], axis=1)
-   
-    taxa = pd.DataFrame(columns=casos.columns, index=casos.index)
+        
+    sem_casos_novos_rescidivas = set(municipios).difference(set(casos_novos_rescidivas.index))
+    casos_novos_rescidivas = pd.concat([
+        casos_novos_rescidivas,
+        pd.DataFrame(index=sem_casos_novos_rescidivas, columns=anos)
+    ], axis=0)
     
-    for idx in null.index:
+    taxa = pd.DataFrame(columns=casos_novos_rescidivas.columns, index=casos_novos_rescidivas.index)
+    
+    for idx in taxa.index:
         try:
-            taxa.loc[idx] = null.loc[idx] / casos.loc[idx] * 100
+            taxa.loc[idx] = evolucao_null.loc[idx] / casos_novos_rescidivas.loc[idx] * 100
         except:
             print(idx)
         
