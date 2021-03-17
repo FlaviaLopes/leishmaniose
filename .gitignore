@@ -38,10 +38,14 @@ MANIFEST
 
 # directories
 output/*
-data/raw/*
-data/interim/*
+data/raw/leiteg/
+data/raw/leivis
+data/raw/populacao
+data/raw/*.csv
+data/interim/leiteg
 data/processed/*
-data/indicadores/*
+data/indicadores/tegumentar
+data/geojsBR.json
 
 # Installer logs
 pip-log.txt
