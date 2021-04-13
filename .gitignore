@@ -46,7 +46,9 @@ data/interim/leiteg
 data/interim/leivis/casos_*
 data/processed/*
 data/indicadores/tegumentar
-data/geojsBR.json
+data/*shp
+data/*shx
+data/*.dbf
 mapas/*
 refs/*
 
