@@ -47,6 +47,8 @@ data/interim/leivis/casos_*
 data/processed/*
 data/indicadores/tegumentar
 data/geojsBR.json
+mapas/*
+refs/*
 
 # Installer logs
 pip-log.txt
