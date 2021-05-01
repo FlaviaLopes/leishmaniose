@@ -41,10 +41,8 @@ output/*
 data/raw/leiteg/
 data/raw/leivis
 data/raw/populacao
-data/raw/*.csv
 data/interim/leiteg
 data/interim/leivis/casos_*
-data/processed/*
 data/indicadores/tegumentar
 data/*shp
 data/*shx
