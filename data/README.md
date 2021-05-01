@@ -1,17 +1,14 @@
-***
-# Sobre os dados
-***
 
-    ├── raw         - neste diretório ficam os dados originais, brutos, no caso os dados obtidos diretamente do site do datasus. São arquivos no formato .dbc (.dbf comprimidos)
-    |
-    ├── interim     - neste diretório ficam os dados intermediários, que já passaram por um processamento que ainda não foi || finalizado. Convertidos de .dbc para .csv.
-    |
-    ├── processed   - neste diretório ficam os dados com processamento finalizado, pronto para serem utilizados nas análises.
+# Sobre os dados
+
+
+├── raw         - neste diretório ficam os dados originais, brutos, no caso os dados obtidos diretamente do site do datasus. São arquivos no formato .dbc (.dbf comprimidos)
+|
+├── interim     - neste diretório ficam os dados intermediários, que já passaram por um processamento que ainda não foi || finalizado. Convertidos de .dbc para .csv.
+|
+├── processed   - neste diretório ficam os dados com processamento finalizado, pronto para serem utilizados nas análises.
 
 ## Instruções
-
-> faça download dos dados no endereço fornecido acima e descompacte-os no diretório `raw` em seu respectivo diretório: 
-> - Dados de Leishmaniose Visceral em `leivis`.
 
 ### Base de dados finais do SINAN para LV
 > Clique em [Serviços ->> Transferência/Download de arquivos ->> Sinan - Dados Finais](http://www2.datasus.gov.br/DATASUS/index.php?area=0901&item=1&acao=41) 
@@ -34,7 +31,7 @@
 > Salve o arquivo compactado no diretório `raw/populacao`, em seguida descompacte-o e os demais arquivos compactados que existirem aninhados. Deixe no diretório apenas os .dbf de 2007 a 2019.
 
 ### Informações de municípios: código, microrregião, macrorregião, estado
-> Clique em [Informações Municípios](ftp://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/divisao_territorial/2018/DTB_2018.zip) 
+> Acesse Informações de Municípios em ftp://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/divisao_territorial/2018/DTB_2018.zip 
 > Salve o arquivo no diretório `raw/`, em seguida descompacte-o. Apenas arquivo `RELATORIO_DTB_BRASIL_MUNICIPIO.xls`. Outros oferecem informações de distritos e subdistritos de cada município, entretanto será desnecessário, visto que não há estimativas populacionais a nível distrital para cálculo de indicadores.
 
 
