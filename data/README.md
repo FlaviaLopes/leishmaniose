@@ -2,11 +2,11 @@
 # Sobre os dados
 
 
-├── raw         - neste diretório ficam os dados originais, brutos, no caso os dados obtidos diretamente do site do datasus. São arquivos no formato .dbc (.dbf comprimidos)
-|
-├── interim     - neste diretório ficam os dados intermediários, que já passaram por um processamento que ainda não foi || finalizado. Convertidos de .dbc para .csv.
-|
-├── processed   - neste diretório ficam os dados com processamento finalizado, pronto para serem utilizados nas análises.
+    ├── raw         - neste diretório ficam os dados originais, brutos, no caso os dados obtidos diretamente do site do datasus. São arquivos no formato .dbc (.dbf comprimidos)
+    |
+    ├── interim     - neste diretório ficam os dados intermediários, que já passaram por um processamento que ainda não foi || finalizado. Convertidos de .dbc para .csv.
+    |
+    ├── processed   - neste diretório ficam os dados com processamento finalizado, pronto para serem utilizados nas análises.
 
 ## Instruções
 
