@@ -19,6 +19,8 @@
 > - na quarta caixa: todos os estados
 > Envie a consulta e em seguida selecione todos arquivos, dê um nome ao conjunto e faça o download.
 > Salve o arquivo compactado no diretório `raw/leivis`, em seguida descompacte-o
+> Obs.: Se vier arquivos faltante de algum estado faça o download separado por estado.
+> Os que faltaram pra mim foram: PA, SC e RR.
 
 ### Base de estimativa populacional dos municípios
 > Clique em [Serviços ->> Transferência/Download de arquivos ->> Bases Populacionais](http://www2.datasus.gov.br/DATASUS/index.php?area=0901&item=1&acao=35&pad=31655) 
